@@ -1,0 +1,9 @@
+.bg-display{
+    background: rgba(255, 255, 255, 0.284);
+    box-shadow: 0 8px 10px 0 rgba(207, 207, 207, 0.37);
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-right: 1px solid rgba( 255, 255, 255, 0.18 );
+}
