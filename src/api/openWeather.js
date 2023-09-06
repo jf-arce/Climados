@@ -10,7 +10,7 @@ export const getData= async (city)=>{
         return {data,lat,lon};
         
     }catch(error){
-        console.log('No se encontro la ciudad o pais');
+
     }
 }
 
@@ -19,18 +19,16 @@ export const getWeather = async (lat,lon)=>{
     try{
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&cnt=5&lang=es&appid=${KEY}`);
         const data = await response.json();
-    
+
         return data;
     }catch(error){
-       
         console.log('No se encontro la ciudad o pais');
-        
     }
 }
 
 export const getWeatherOfDays = async (lat,lon)=>{
     try{
-        const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&cnt=7&lang=es&appid=${KEY}`
+        const url = `https://api.openweathermap.org/data/2.5/forecast/hourly?lat=${lat}&lon=${lon}&units=metric&cnt=4&lang=es&appid=${KEY}`
         const response = await fetch(url);
         const data = await response.json();
 
