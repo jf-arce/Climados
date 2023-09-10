@@ -11,6 +11,7 @@ export const WeatherOfTheWeek = () => {
   useEffect(() => {
     const search = place;
     getDataWeek(search).then((data) => {
+      console.log(data);
       setDataDays(data.days);
     });
   }, [place]);
@@ -25,7 +26,18 @@ export const WeatherOfTheWeek = () => {
               dayName={day.datetime}
               temp={(((day.temp - 32) * 5) / 9).toFixed(1)}
               icon={day.icon}
-              description={day.conditions}
+              description={
+                day.conditions === "Clear" ? "Despejado" : 
+                day.conditions === "Rain" ? "Lluvia" :
+                day.conditions === "Rain, Partially cloudy" ? "Lluvia, Parcialmente nublado" :
+                day.conditions === "Rain, Overcast" ? "Lluvia, Nublado" :
+                day.conditions === "Overcast" ? "Nublado" :
+                day.conditions === "Partially cloudy" ? "Parcialmente nublado" :
+                day.conditions === "Snow" ? "Nieve" :
+                day.conditions === "Thunderstorm" ? "Tormenta" :
+                day.conditions === "Drizzle" ? "Llovizna" :
+                day.conditions === "Mist" ? "Niebla": ""
+              }
               img={temperaturesStates2[day.icon]}
             />
           );

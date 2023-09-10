@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { SearchBar } from '../SearchBar/SearchBar'
-import { getData, getWeather, getWeatherOfDays } from '../../api/openWeather';
+import { getWeather } from '../../api/openWeather';
 import { Clock } from '../Clock/Clock';
 import { useCurrentLocation } from '../../hooks/useCurrentLocation';
-import { temperaturesStates } from '../../utils/temperaturesStates';
+import { temperaturesStates, temperaturesStates2 } from '../../utils/temperaturesStates';
+import { usePlaceContext } from '../../Context/PlaceContext';
+import { getDataWeek } from '../../api/visualCrossingData';
 import { BiSolidMap } from "react-icons/bi";
 import './DisplayBar.css'
-import { usePlaceContext } from '../../Context/PlaceContext';
-
 
 export const DisplayBar = () => {
   const [ search, setSearch ] = useState();
@@ -36,22 +36,29 @@ export const DisplayBar = () => {
   const handleSubmit = (e)=>{
     e.preventDefault();
     handleSetPlace(search);
-    getData(search).then((data)=>{
+
+    getDataWeek(search).then((data) => {
+      console.log(data);
       setErrorState(false);
-      getWeather(data.lat,data.lon).then((data)=>{   
-        setCity({
-          name: data.name,
-          country: data.sys.country,
-          temperature: Math.round(data.main.temp),
-          description: data.weather[0].description,
-          state: data.weather[0].main,
-          imageState: temperaturesStates[data.weather[0].main]
-        })
+      setCity({
+        name: data.resolvedAddress,
+        temperature: (((data.currentConditions.temp - 32) * 5) / 9).toFixed(1),
+        description: data.description,
+        conditions: 
+          data.currentConditions.conditions === "Clear" ? "Despejado" : 
+          data.currentConditions.conditions === "Rain" ? "Lluvia" :
+          data.currentConditions.conditions === "Overcast" ? "Nublado" :
+          data.currentConditions.conditions === "Snow" ? "Nieve" :
+          data.currentConditions.conditions === "Thunderstorm" ? "Tormenta" :
+          data.currentConditions.conditions === "Drizzle" ? "Llovizna" :
+          data.currentConditions.conditions === "Mist" ? "Niebla": "",
+        state: data.currentConditions.icon,
+        imageState: temperaturesStates2[data.currentConditions.icon]
       })
     }).catch((e)=>{
       setError("No se encontró la ciudad o país");
       setErrorState(true);
-    })
+    });
   }
 
   //Obtenemos el valor del input
@@ -74,14 +81,15 @@ export const DisplayBar = () => {
         </picture>
         <div className='flex flex-col items-center gap-6'>
           <h2 className='text-5xl font-semibold'>{city.temperature}°C</h2>
-          <p className='capitalize'>{city.description}</p>
+          <p className='capitalize text-center'>Actualmente {city.conditions}</p>
+          <p className='capitalize text-center'>{city.description}</p>
           <Clock/>
         </div>  
       </div>
       <div className='flex flex-grow items-end mb-6'>
         <div className='flex justify-center items-center gap-1'>
           <BiSolidMap/>
-          <h4 className='capitalize'>{city ? `${city.name}, ${city.country}` : "La Plata" }</h4>
+          <h4 className='capitalize'>{city ? `${city.name}` : "La Plata" }</h4>
         </div>
       </div>
     </div>

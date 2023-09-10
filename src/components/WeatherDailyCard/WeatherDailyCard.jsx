@@ -7,7 +7,7 @@ export const WeatherDailyCard = ({dayName, temp, icon, img,description}) => {
       <picture>
         <img src={img} alt={icon} className='w-24'/>
       </picture>
-      <p>{description}</p>
+      <p className='text-center'>{description}</p>
       <h4 className='font-semibold'>{temp}°C</h4>
     </div>
   )
